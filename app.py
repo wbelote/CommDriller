@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -20,6 +20,13 @@ View time history, for case or for all
 @app.route("/")
 def main():
     return render_template("main.html")
+
+
+@app.route("/submit", methods=["POST", "GET"])
+def submit():
+    if request.method == "POST":
+        data = dict(request.form.items())
+        return render_template("submitted.html", time=data["time"])
 
 
 if __name__ == '__main__':

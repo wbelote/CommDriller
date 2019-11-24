@@ -1,0 +1,34 @@
+
+* {
+    display: flex;
+    box-sizing: border-box;
+    background-color: #242424;
+    color: #FFFFFF;
+}
+
+body {
+    --accent1: #3680E0;
+    position: fixed;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    width: 400px;
+    height: 200px;
+    justify-content: stretch;
+    align-items: flex-start;
+}
+
+input {
+    flex-grow: 1;
+    margin: 16px;
+    border: 0.5px solid #FFFFFF;
+    background-color: #121212;
+    padding: 20px;
+    font-size: 20pt;
+}

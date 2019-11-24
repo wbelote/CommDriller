@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
+
 <body>
 
-    <form action="/submit">
-        <input type="number" name="time" id="time">
-        <input type="submit" value="Submit">
+    <form action="/submit" method="POST">
+        <input type="text" name="time">
     </form>
 
 </body>
+
 </html>

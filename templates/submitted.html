@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
+
 <body>
 
-    <form action="/submit">
-        <input type="text" name="time" id="time">
-    </form>
+    You submitted a time of {{ time }}
 
 </body>
+
 </html>
