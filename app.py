@@ -1,4 +1,6 @@
-from flask import Flask
+from flask import Flask, render_template
+
+app = Flask(__name__)
 
 """
 App for tracking times and algs for 3-style comms
@@ -13,3 +15,12 @@ Timer view:
     - Time since drilled, longer first
 View time history, for case or for all
 """
+
+
+@app.route("/")
+def main():
+    return render_template("main.html")
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
