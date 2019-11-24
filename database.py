@@ -20,7 +20,7 @@ CREATE TABLE "Times" (
 );
 """
 
-c.execute(schema)
+c.executescript(schema)
 db.commit()
 
 c.close()
