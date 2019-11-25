@@ -29,13 +29,14 @@ document.addEventListener("keyup", (event) => {
 
     timer_display.style.color = "#FFFFFF";
 
-    if (diff < 0.1) {
-        start_time = new Date();
-        timer_running = true;
-        timer_display.innerHTML = diff;
-    }
-
     if (event.code == "Space") {
+
+        if (diff < 0.1) {
+            start_time = new Date();
+            timer_running = true;
+            timer_display.innerHTML = diff;
+        }
+
         timer_entry.value = timer_entry.value.trim();
     }
 

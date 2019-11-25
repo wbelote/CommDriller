@@ -159,14 +159,12 @@ def submit(c, data):
 
 @query
 def history(c):
+    class Time:
+        def __init__(self, data):
+            self.time, self.date = data[:2]
+            self.case = f"UFR-{data[2]}-{data[3]} ({data[4]}{data[5]})"
     c.execute(join_times)
-    return c.fetchall()
-
-
-class Time:
-    def __init__(self, data):
-        self.time, self.date = data[:2]
-        self.case = f"UFR-{data[2]}-{data[3]} ({data[4]}{data[5]})"
+    return [Time(x) for x in c.fetchall()]
 
 
 # setup()
