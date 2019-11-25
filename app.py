@@ -21,21 +21,21 @@ View time history, for case or for all
 
 @app.route("/")
 def home():
-    return redirect(url_for("corners"))
+    case = random.choice(db.cases())
+    return redirect(f"corners/{next(case)}")
 
 
 @app.route("/corners")
 def corners():
     case = random.choice(db.cases())
-    case_name = f"UFR-{case[1]}-{case[3]} ({case[2]}{case[4]})"
-    return render_template("main.html", name=case_name, alg=case[5], case_id=case[0])
+    return redirect(f"corners/{case[0]}")
 
 
 @app.route("/corners/<case_id>")
 def corners_id(case_id):
     case = db.case_for_id(case_id)
-    case_name = f"UFR-{case[1]}-{case[3]} ({case[2]}{case[4]})"
-    return render_template("main.html", name=case_name, alg=case[5], case_id=case[0])
+    case_name = f"UFR-{case[1]}-{case[2]} ({case[3]}{case[4]})"
+    return render_template("main.html", name=case_name, alg=case[5], case_id=case[0], history=db.history())
 
 
 @app.route("/submit", methods=["POST", "GET"])

@@ -116,11 +116,25 @@ def setup(c):
 join_cases = """
 SELECT  Cases.id
     ,   t1.faces AS faces1
-    ,   t1.letter AS letter1
     ,   t2.faces AS faces2
+    ,   t1.letter AS letter1
     ,   t2.letter AS letter2
     ,   Cases.alg
-From Cases
+FROM Cases
+    LEFT JOIN Targets t1 ON t1.id = Cases.target1
+    LEFT JOIN Targets t2 ON t2.id = Cases.target2
+"""
+
+
+join_times = """
+SELECT Times.time
+    ,   Times.date
+    ,   t1.faces AS faces1
+    ,   t2.faces AS faces2
+    ,   t1.letter AS letter1
+    ,   t2.letter AS letter2
+FROM Times
+    LEFT JOIN Cases ON Times.case_id = Cases.id
     LEFT JOIN Targets t1 ON t1.id = Cases.target1
     LEFT JOIN Targets t2 ON t2.id = Cases.target2
 """
@@ -128,7 +142,7 @@ From Cases
 
 @query
 def cases(c, cat=1):
-    c.execute(f"{join_cases} WHERE Cases.type = ?", (cat,))
+    c.execute(f"SELECT id FROM Cases WHERE type = ?", (cat,))
     return c.fetchall()
 
 
@@ -143,6 +157,18 @@ def submit(c, data):
     c.execute("INSERT INTO Times(time, date, case_id) VALUES (?,?,?);", data)
 
 
-setup()
+@query
+def history(c):
+    c.execute(join_times)
+    return c.fetchall()
+
+
+class Time:
+    def __init__(self, data):
+        self.time, self.date = data[:2]
+        self.case = f"UFR-{data[2]}-{data[3]} ({data[4]}{data[5]})"
+
+
+# setup()
 if __name__ == '__main__':
     print(cases())

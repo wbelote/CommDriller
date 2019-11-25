@@ -4,12 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <style>
         * {
-            /* font-family: 'Open Sans', sans-serif; */
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-family: 'Open Sans', sans-serif;
         }
     </style>
 </head>
@@ -17,6 +16,15 @@
 <body class="elev1">
 
     <div id="main" class="elev1">
+
+        <div id="history" class="elev2">
+            {% for item in history %}
+            <div class="history-item">
+                <p class="history-time"> {{ item.time }} </p>
+                <p class="history-case"> {{ item.case }} </p>
+            </div>
+            {% endfor %}
+        </div>
 
         <div id="case" class="elev2">
             <h1 id="case-name">{{ name }}</h1>
