@@ -6,7 +6,6 @@ var diff = 0.0;
 var timer_display = document.getElementById("time-display");
 var timer_entry = document.getElementById("time-entry");
 timer_display.innerHTML = "ready";
-timer_entry.focus();
 
 document.addEventListener("keydown", (event) => {
 
@@ -20,6 +19,8 @@ document.addEventListener("keydown", (event) => {
         timer_display.style.color = "#33EE33";
         diff = 0.0;
         timer_display.innerHTML = diff;
+    } else if (event.code == "Enter" && parseFloat(timer_entry.value) > 0.1) {
+        document.forms["time-form"].submit()
     }
 
     timer_entry.value = timer_entry.value.trim();
@@ -40,7 +41,7 @@ document.addEventListener("keyup", (event) => {
 
         timer_entry.value = timer_entry.value.trim();
     } else if (event.code == "Enter") {
-        document.forms["time-form"].submit()
+        timer_entry.focus();
     }
 
 });

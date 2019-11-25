@@ -42,6 +42,9 @@ def corners_id(case_id):
 def submit():
     if request.method == "POST":
         data = dict(request.form.items())
+        if not data["time"].strip():
+            print("DATA NOT SUBMITTED")
+            return redirect(f"corners/{data['case_id']}")
         today = time.localtime()
         date = today.tm_year * 10000 + today.tm_mon * 100 + today.tm_mday
         db.submit((data["time"], date, data["case_id"]))
