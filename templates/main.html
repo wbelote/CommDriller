@@ -4,14 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <style>
+        * {
+            font-family: 'Open Sans', sans-serif;
+        }
+    </style>
 </head>
 
-<body>
+<body class="elev1">
 
-    <form action="/submit" method="POST">
-        <input type="text" name="time">
-    </form>
+    <div id="main" class="elev1">
+
+        <div id="case" class="elev2">
+            <h1 id="case-name">{{ name }}</h1>
+            <p id="case-alg">{{ alg }}</p>
+            <a href="{{ url_for('corners') }}" id="next">NEXT CASE</a>
+        </div>
+
+        <div id="time_input" class="elev1">
+            <form action="/submit" method="POST">
+                <input type="text" name="time" class="elev0">
+            </form>
+            <h1 id="timer">loading</h1>
+        </div>
+
+    </div>
+
+    <script type=text/javascript src="{{ url_for('static', filename='timer.js') }}"></script>
 
 </body>
 

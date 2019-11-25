@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
+from database import cases as db_cases
 import random
 
 app = Flask(__name__)
@@ -20,7 +21,14 @@ View time history, for case or for all
 
 @app.route("/")
 def home():
-    return redirect(url_for("/corners"))
+    return redirect(url_for("corners"))
+
+
+@app.route("/corners")
+def corners():
+    case = random.choice(db_cases())
+    case_name = f"UFR-{case[0]}-{case[2]} ({case[1]}{case[3]})"
+    return render_template("main.html", name=case_name, alg=case[4])
 
 
 @app.route("/submit", methods=["POST", "GET"])

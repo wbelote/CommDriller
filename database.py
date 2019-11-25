@@ -2,11 +2,15 @@ import sqlite3
 
 
 def query(f):
-    def full():
+    def full(args=None):
         db = sqlite3.connect("comms.db")
-        f(db.cursor())
+        if args:
+            result = f(db.cursor(), args)
+        else:
+            result = f(db.cursor())
         db.commit()
         db.close()
+        return result
 
     return full
 
@@ -30,8 +34,8 @@ CREATE TABLE Times (
     case_id   NUMERIC
 );
 
-DROP TABLE IF EXISTS Locations;
-CREATE TABLE Locations (
+DROP TABLE IF EXISTS Targets;
+CREATE TABLE Targets (
     id    INTEGER NOT NULL PRIMARY KEY UNIQUE,
     faces TEXT NOT NULL UNIQUE,
     letter    TEXT NOT NULL
@@ -47,9 +51,9 @@ letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 loc_id = {}
 for i in range(24):
     loc_id[corners[i]] = 2 * i + 1
-    default_data += f"INSERT INTO Locations(faces, letter) VALUES ('{corners[i]}', '{letters[i]}');\n"
+    default_data += f"INSERT INTO Targets(faces, letter) VALUES ('{corners[i]}', '{letters[i]}');\n"
     loc_id[edges[i]] = 2 * i + 2
-    default_data += f"INSERT INTO Locations(faces, letter) VALUES ('{edges[i]}', '{letters[i]}');\n"
+    default_data += f"INSERT INTO Targets(faces, letter) VALUES ('{edges[i]}', '{letters[i]}');\n"
 
 
 # Comms from Daniel's sheet
@@ -103,9 +107,29 @@ with open("comms-corners.tsv") as table:
 def setup(c):
     c.executescript(schema)
     for q in default_data.split("\n"):
-        print(q)
+        # print(q)
         c.executescript(q)
 
 
+join_cases = """
+SELECT  t1.faces AS faces1
+    ,   t1.letter AS letter1
+    ,   t2.faces AS faces2
+    ,   t2.letter AS letter2
+    ,   Cases.alg
+From Cases
+    LEFT JOIN Targets t1 ON t1.id = Cases.target1
+    LEFT JOIN Targets t2 ON t2.id = Cases.target2
+WHERE Cases.type = ?
+"""
+
+
+@query
+def cases(c, cat=1):
+    c.execute(join_cases, (cat,))
+    return c.fetchall()
+
+
+setup()
 if __name__ == '__main__':
-    setup()
+    print(cases())
