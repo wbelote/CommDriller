@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
+import random
 
 app = Flask(__name__)
 
@@ -18,8 +19,8 @@ View time history, for case or for all
 
 
 @app.route("/")
-def main():
-    return render_template("main.html")
+def home():
+    return redirect(url_for("/corners"))
 
 
 @app.route("/submit", methods=["POST", "GET"])
