@@ -21,7 +21,7 @@
         <div id="case" class="elev2">
             <h1 id="case-name">{{ name }}</h1>
             <p id="case-alg">{{ alg }}</p>
-            <a href="{{ url_for('corners') }}" id="next">NEXT CASE</a>
+            <a href="{{ url_for('corners/{{ case_id }}') }}" id="next">NEXT CASE</a>
         </div>
 
         <div id="time-input" class="elev1">

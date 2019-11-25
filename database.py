@@ -31,7 +31,7 @@ CREATE TABLE Times (
     id    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     time  NUMERIC NOT NULL,
     date  TEXT,
-    case_id   NUMERIC
+    case_id   INTEGER NOT NULL
 );
 
 DROP TABLE IF EXISTS Targets;
@@ -114,7 +114,8 @@ def setup(c):
 
 
 join_cases = """
-SELECT  t1.faces AS faces1
+SELECT  Cases.id
+    ,   t1.faces AS faces1
     ,   t1.letter AS letter1
     ,   t2.faces AS faces2
     ,   t2.letter AS letter2
@@ -130,6 +131,11 @@ WHERE Cases.type = ?
 def cases(c, cat=1):
     c.execute(join_cases, (cat,))
     return c.fetchall()
+
+
+@query
+def submit(c, data):
+    c.execute("INSERT INTO Times(time, date, case_id) VALUES (?,?,?);", data)
 
 
 setup()

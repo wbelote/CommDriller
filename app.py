@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
-from database import cases as db_cases
-import random
+from database import cases as db_cases, submit as db_submit
+import random, time
 
 app = Flask(__name__)
 
@@ -27,15 +27,18 @@ def home():
 @app.route("/corners")
 def corners():
     case = random.choice(db_cases())
-    case_name = f"UFR-{case[0]}-{case[2]} ({case[1]}{case[3]})"
-    return render_template("main.html", name=case_name, alg=case[4])
+    case_name = f"UFR-{case[1]}-{case[3]} ({case[2]}{case[4]})"
+    return render_template("main.html", name=case_name, alg=case[5], case_id=case[0])
 
 
-@app.route("/submit", methods=["POST", "GET"])
-def submit():
+@app.route("/submit/<case_id>", methods=["POST", "GET"])
+def submit(case_id):
     if request.method == "POST":
         data = dict(request.form.items())
-        return render_template("submitted.html", time=data["time"])
+        today = time.localtime()
+        date = today.tm_year * 1000 + today.tm_mon * 100 + today.tm_mday
+        db_submit(data["time"], date, case_id)
+    return redirect(url_for("corners"))
 
 
 if __name__ == '__main__':
