@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet"> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <style>
         * {
-            font-family: 'Open Sans', sans-serif;
+            /* font-family: 'Open Sans', sans-serif; */
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         }
     </style>
 </head>
@@ -23,11 +24,11 @@
             <a href="{{ url_for('corners') }}" id="next">NEXT CASE</a>
         </div>
 
-        <div id="time_input" class="elev1">
+        <div id="time-input" class="elev1">
             <form action="/submit" method="POST">
-                <input type="text" name="time" class="elev0">
+                <input type="text" id="time-entry" name="time" class="elev0" value="">
             </form>
-            <h1 id="timer">loading</h1>
+            <h1 id="time-display">loading</h1>
         </div>
 
     </div>

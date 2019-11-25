@@ -1,27 +1,32 @@
 
 var timer_running = false;
-var start_time, end_time
-var diff = 0;
+var start_time, end_time;
+var diff = 0.0;
 
-var timer_display = document.getElementById("timer");
-timer_display.innerHTML = diff;
-document.body.addEventListener("keydown", keydown);
-document.body.addEventListener("keyup", keyup);
+var timer_display = document.getElementById("time-display");
+var timer_entry = document.getElementById("time-entry");
+timer_display.innerHTML = "ready";
 
-function keyup() {
+document.addEventListener("keyup", function (event) {
     timer_display.style.color = "#FFFFFF";
 
-    start_time = new Date();
-    timer_display.innerHTML = diff;
-}
+    if (diff < 0.1) {
+        start_time = new Date();
+        timer_running = true;
+        timer_display.innerHTML = diff;
+    }
+});
 
-function keydown() {
+document.addEventListener("keydown", function (event) {
     timer_display.style.color = "#33EE33";
-
-    end_time = new Date();
-    diff = (end_time - start_time) / 100;
-    timer_display.innerHTML = diff;
-}
+    if (timer_running) {
+        end_time = new Date();
+        diff = (end_time - start_time) / 1000;
+        timer_display.innerHTML = diff;
+        timer_entry.value = diff;
+    }
+    timer_running = false;
+});
 
 /*
 
