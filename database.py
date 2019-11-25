@@ -82,11 +82,13 @@ def invert(alg):
 
 
 with open("comms-corners.tsv") as table:
-    firsts = table.readline().strip("\n").split("\t")[1:]
+    firsts = table.readline().replace("’", "'").replace("â€™", "'")
+    firsts = firsts.strip("\n").split("\t")[1:]
     # print(firsts)
     comms = {p: {} for p in firsts}
     for i in range(24):
-        line = table.readline().strip("\n").split("\t")
+        line = table.readline().replace("’", "'").replace("â€™", "'")
+        line = line.strip("\n").split("\t")
         # print(f"##########\n{i}\n{line}\n###########\n")
         second = line.pop(0)
         for j in filter(lambda x: line[x] not in {"", "twist", "flip"}, range(24)):
