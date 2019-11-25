@@ -18,17 +18,23 @@
 }
 .elev2 {
     background-color: #18303A;
+    border-radius: 8px;
 }
 
+
 h1 {
-    font-size: 48px;
+    text-align: center;
+    font-size: 120px;
 }
 h2 {
     font-size: 30px;
     padding: 10px;
 }
-p {
+h3 {
     padding: 10px;
+}
+p {
+    font-size: 14px;
 }
 a {
     color: var(--accent1);
@@ -45,30 +51,26 @@ body {
 
 #main {
     display: grid;
-    grid-template-columns: 360px auto;
+    grid-template-columns: 320px auto;
     grid-template-rows: 240px auto;
     gap: 20px;
     position: fixed;
     width: 100%;
     height: 100%;
     margin: 0px;
-    padding: 16px 100px;
+    padding: 24px;
 }
 
 #history {
-    grid-row: 1 / 3;
-    grid-column: 1 / 2;
+    grid-area: 1 / 1 / span 2 / span 1;
     display: flex;
     flex-direction: column;
 }
-
 #case {
     grid-column: 2 / 3;
     grid-row: 1 / 2;
     display: flex;
     flex-direction: column;
-    margin: 10px;
-    border-radius: 5px;
     padding: 20px;
 }
 #time-input {
@@ -85,13 +87,21 @@ input {
     flex-grow: 1;
     margin: 16px;
     border: 0.5px solid #FFFFFF;
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: #111111;
     padding: 20px;
     font-size: 30px;
 }
 
-h1#time-display {
-    text-align: center;
-    font-size: 120px;
+#history {
+    padding: 16px;
+}
+
+.history {
+    display: inline;
+    padding: 0;
+}
+
+div.history {
+    padding: 4px;
 }

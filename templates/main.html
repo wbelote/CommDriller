@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>3-style</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <style>
@@ -19,16 +19,16 @@
 
         <div id="history" class="elev2">
             {% for item in history %}
-            <div class="history-item">
-                <p class="history-time"> {{ item.time }} </p>
-                <p class="history-case"> {{ item.case }} </p>
+            <div class="history">
+                <h3 class="history">{{ item.time }}</h3>
+                <p class="history">{{ item.case }}</p>
             </div>
             {% endfor %}
         </div>
 
         <div id="case" class="elev2">
-            <h1 id="case-name">{{ name }}</h1>
-            <p id="case-alg">{{ alg }}</p>
+            <h2 id="case-name">{{ name }}</h2>
+            <h3 id="case-alg">{{ alg }}</h3>
             <a href="{{ url_for('corners') }}" id="next">NEXT CASE</a>
         </div>
 
@@ -43,9 +43,6 @@
     </div>
 
     <script type=text/javascript src="{{ url_for('static', filename='timer.js') }}"></script>
-    <script>
-        document.getElementById("time-form").href
-    </script>
 
 </body>
 

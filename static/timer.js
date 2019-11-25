@@ -6,6 +6,7 @@ var diff = 0.0;
 var timer_display = document.getElementById("time-display");
 var timer_entry = document.getElementById("time-entry");
 timer_display.innerHTML = "ready";
+timer_entry.focus();
 
 document.addEventListener("keydown", (event) => {
 
@@ -38,6 +39,8 @@ document.addEventListener("keyup", (event) => {
         }
 
         timer_entry.value = timer_entry.value.trim();
+    } else if (event.code == "Enter") {
+        document.forms["time-form"].submit()
     }
 
 });
