@@ -21,12 +21,13 @@
         <div id="case" class="elev2">
             <h1 id="case-name">{{ name }}</h1>
             <p id="case-alg">{{ alg }}</p>
-            <a href="{{ url_for('corners/{{ case_id }}') }}" id="next">NEXT CASE</a>
+            <a href="{{ url_for('corners') }}" id="next">NEXT CASE</a>
         </div>
 
         <div id="time-input" class="elev1">
-            <form action="/submit" method="POST">
+            <form id="time-form" action="/submit" method="POST">
                 <input type="text" id="time-entry" name="time" class="elev0" value="">
+                <input type="hidden" name="case_id" value="{{ case_id }}">
             </form>
             <h1 id="time-display">loading</h1>
         </div>
@@ -34,6 +35,9 @@
     </div>
 
     <script type=text/javascript src="{{ url_for('static', filename='timer.js') }}"></script>
+    <script>
+        document.getElementById("time-form").href
+    </script>
 
 </body>
 

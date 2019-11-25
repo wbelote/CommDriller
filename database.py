@@ -123,14 +123,19 @@ SELECT  Cases.id
 From Cases
     LEFT JOIN Targets t1 ON t1.id = Cases.target1
     LEFT JOIN Targets t2 ON t2.id = Cases.target2
-WHERE Cases.type = ?
 """
 
 
 @query
 def cases(c, cat=1):
-    c.execute(join_cases, (cat,))
+    c.execute(f"{join_cases} WHERE Cases.type = ?", (cat,))
     return c.fetchall()
+
+
+@query
+def case_for_id(c, case_id):
+    c.execute(f"{join_cases} WHERE Cases.id = ?", (case_id,))
+    return c.fetchone()
 
 
 @query
