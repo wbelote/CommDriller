@@ -151,17 +151,17 @@ FROM Times
 # Currently haven't implemented time since review yet.
 
 order_cases = """
-SELECT Cases.id, TbAvg.t, TbCount.n FROM Cases
+SELECT Cases.id, TbAvg.t, TbCount.n, 1 / (t + (t / (n + 1))) as priority FROM Cases
 
-INNER JOIN 
+LEFT JOIN 
 (SELECT case_id, avg(time) AS t FROM Times GROUP BY case_id) TbAvg
 ON id = TbAvg.case_id
 
-INNER JOIN
+LEFT JOIN
 (SELECT case_id, count(time) AS n FROM Times GROUP BY case_id) TbCount
 ON id = TbCount.case_id
 
-ORDER BY t + (t / (n + 1)) DESC;
+WHERE Cases.type = ?
 """
 
 
@@ -173,7 +173,7 @@ def all_cases(c, cat=1):
 
 @query
 def priority_cases(c, cat=1):
-    c.execute(f"SELECT id FROM Cases WHERE type = ?", (cat,))
+    c.execute(order_cases, (cat,))
     return c.fetchall()
 
 

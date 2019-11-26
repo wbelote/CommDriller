@@ -26,15 +26,17 @@ case_queue = db.priority_cases()
 
 @app.route("/")
 def home():
-    case = case_queue.pop(0)
-    case_queue.append(case)
-    return redirect(f"corners/{case[0]}")
+    return redirect(f"corners")
 
 
 @app.route("/corners")
 def corners():
-    case = case_queue.pop(0)
-    case_queue.append(case)
+    def fix(w):
+        if w:
+            return 1 / w
+        return 1000
+    priority = [fix(x[3]) for x in case_queue]
+    case = random.choices(case_queue, weights=priority)[0]
     return redirect(f"corners/{case[0]}")
 
 
