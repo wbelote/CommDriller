@@ -21,16 +21,20 @@ Timer view:
 View time history, for case or for all [PARTIAL]
 """
 
+case_queue = db.priority_cases()
+
 
 @app.route("/")
 def home():
-    case = random.choice(db.all_cases())
-    return redirect(f"corners/{next(case)}")
+    case = case_queue.pop(0)
+    case_queue.append(case)
+    return redirect(f"corners/{case[0]}")
 
 
 @app.route("/corners")
 def corners():
-    case = random.choice(db.all_cases())
+    case = case_queue.pop(0)
+    case_queue.append(case)
     return redirect(f"corners/{case[0]}")
 
 
@@ -48,8 +52,7 @@ def submit():
         if not data["time"].strip():
             print("DATA NOT SUBMITTED")
             return redirect(f"corners/{data['case_id']}")
-        today = time.localtime()
-        date = today.tm_year * 10000 + today.tm_mon * 100 + today.tm_mday
+        date = time.time() // (1000 * 60 * 60 * 24)
         db.submit((data["time"], date, data["case_id"]))
         return redirect(f"corners/{data['case_id']}")
     return redirect(url_for(f"corners"))

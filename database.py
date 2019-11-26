@@ -147,8 +147,21 @@ FROM Times
 # Start with solve time,
 # adjust slower based on low solve count,
 # adjust faster based on long time since review
+#
+# Currently haven't implemented time since review yet.
 
 order_cases = """
+SELECT Cases.id, TbAvg.t, TbCount.n FROM Cases
+
+INNER JOIN 
+(SELECT case_id, avg(time) AS t FROM Times GROUP BY case_id) TbAvg
+ON id = TbAvg.case_id
+
+INNER JOIN
+(SELECT case_id, count(time) AS n FROM Times GROUP BY case_id) TbCount
+ON id = TbCount.case_id
+
+ORDER BY t + (t / (n + 1)) DESC;
 """
 
 
