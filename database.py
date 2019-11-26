@@ -125,7 +125,6 @@ FROM Cases
     LEFT JOIN Targets t2 ON t2.id = Cases.target2
 """
 
-
 join_times = """
 SELECT Times.time
     ,   Times.date
@@ -140,8 +139,27 @@ FROM Times
 """
 
 
+# Formula:
+# t: median solve time, d: days since last review, n: number of times
+# priority =
+#       t + t/(n+1) - t*( 1 - 1/(d+1) )
+#
+# Start with solve time,
+# adjust slower based on low solve count,
+# adjust faster based on long time since review
+
+order_cases = """
+"""
+
+
 @query
-def cases(c, cat=1):
+def all_cases(c, cat=1):
+    c.execute(f"SELECT id FROM Cases WHERE type = ?", (cat,))
+    return c.fetchall()
+
+
+@query
+def priority_cases(c, cat=1):
     c.execute(f"SELECT id FROM Cases WHERE type = ?", (cat,))
     return c.fetchall()
 
@@ -167,6 +185,5 @@ def history(c):
     return [Time(x) for x in c.fetchall()]
 
 
-# setup()
 if __name__ == '__main__':
-    print(cases())
+    setup()

@@ -1,6 +1,9 @@
+import random
+import time
+
 from flask import Flask, render_template, request, redirect, url_for
+
 import database as db
-import random, time
 
 app = Flask(__name__)
 
@@ -8,26 +11,26 @@ app = Flask(__name__)
 App for tracking times and algs for 3-style comms
 
 Timer view:
-- Shows a case, enter time with typing or timer
+- Shows a case, enter time with typing or timer [DONE]
 - Option to show/hide/edit alg for that case
-- Next button for next case
+- Next button for next case [DONE]
 - Prioritizes times based on:
     - Amount drilled, less first
     - Average time, slower first
     - Time since drilled, longer first
-View time history, for case or for all
+View time history, for case or for all [PARTIAL]
 """
 
 
 @app.route("/")
 def home():
-    case = random.choice(db.cases())
+    case = random.choice(db.all_cases())
     return redirect(f"corners/{next(case)}")
 
 
 @app.route("/corners")
 def corners():
-    case = random.choice(db.cases())
+    case = random.choice(db.all_cases())
     return redirect(f"corners/{case[0]}")
 
 
