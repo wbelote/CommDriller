@@ -54,7 +54,7 @@ def submit():
         if not data["time"].strip():
             print("DATA NOT SUBMITTED")
             return redirect(f"corners/{data['case_id']}")
-        date = time.time() // (1000 * 60 * 60 * 24)
+        date = int(time.time())
         db.submit((data["time"], date, data["case_id"]))
         return redirect(f"corners/{data['case_id']}")
     return redirect(url_for(f"corners"))

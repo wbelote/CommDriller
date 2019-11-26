@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS Times;
 CREATE TABLE Times (
     id    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     time  NUMERIC NOT NULL,
-    date  TEXT,
+    date  INTEGER,
     case_id   INTEGER NOT NULL
 );
 
@@ -136,6 +136,7 @@ FROM Times
     LEFT JOIN Cases ON Times.case_id = Cases.id
     LEFT JOIN Targets t1 ON t1.id = Cases.target1
     LEFT JOIN Targets t2 ON t2.id = Cases.target2
+ORDER BY date DESC
 """
 
 
