@@ -9,6 +9,19 @@
     font-size: 24px;
 }
 
+::-webkit-scrollbar {
+    width: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0C181D;
+    background-clip: padding-box;
+    border-left: 0px solid rgba(0, 0, 0, 0);
+    border-right: 8px solid rgba(0, 0, 0, 0);
+    border-top: 12px solid rgba(0, 0, 0, 0);
+    border-bottom: 12px solid rgba(0, 0, 0, 0);
+    border-radius: 3px;
+}
 
 .elev0 {
     background-color: #0C181D;
@@ -60,10 +73,9 @@ body {
     padding: 24px;
 }
 
-#history {
+#history-container {
     grid-area: 1 / 1 / span 2 / span 1;
-    display: flex;
-    flex-direction: column;
+    padding: 16px;
 }
 #case {
     grid-column: 2 / 3;
@@ -93,7 +105,8 @@ input {
 }
 
 #history {
-    padding: 16px;
+    display: inline-block;
+    height: max-content;
 }
 
 .history {
@@ -102,5 +115,7 @@ input {
 }
 
 div.history {
+    display: inline-block;
+    height: 42px;
     padding: 4px;
 }

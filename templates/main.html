@@ -17,13 +17,15 @@
 
     <div id="main" class="elev1">
 
-        <div id="history" class="elev2">
-            {% for item in history %}
-            <div class="history">
-                <h3 class="history">{{ item.time }}</h3>
-                <p class="history">{{ item.case }}</p>
+        <div id="history-container" class="elev2">
+            <div id="history">
+                {% for item in history %}
+                <div class="history">
+                    <h3 class="history">{{ item.time }}</h3>
+                    <p class="history">{{ item.case }}</p>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
 
         <div id="case" class="elev2">
