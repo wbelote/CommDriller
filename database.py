@@ -37,6 +37,7 @@ CREATE TABLE Times (
 DROP TABLE IF EXISTS Targets;
 CREATE TABLE Targets (
     id    INTEGER NOT NULL PRIMARY KEY UNIQUE,
+    type    INTEGER NOT NULL,
     faces TEXT NOT NULL UNIQUE,
     letter    TEXT NOT NULL
 );
@@ -51,9 +52,9 @@ letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 loc_id = {}
 for i in range(24):
     loc_id[corners[i]] = 2 * i + 1
-    default_data += f"INSERT INTO Targets(faces, letter) VALUES ('{corners[i]}', '{letters[i]}');\n"
+    default_data += f"INSERT INTO Targets(type, faces, letter) VALUES (1, '{corners[i]}', '{letters[i]}');\n"
     loc_id[edges[i]] = 2 * i + 2
-    default_data += f"INSERT INTO Targets(faces, letter) VALUES ('{edges[i]}', '{letters[i]}');\n"
+    default_data += f"INSERT INTO Targets(type, faces, letter) VALUES (2, '{edges[i]}', '{letters[i]}');\n"
 
 
 # Comms from Daniel's sheet
@@ -113,6 +114,18 @@ def setup(c):
         c.executescript(q)
 
 
+class Case:
+    def __init__(self, cols):
+        self.id = cols[0]
+        self.c = cols[1:5]
+        self.target1 = [cols[1], cols[3]]
+        self.target2 = [cols[2], cols[4]]
+        self.cycle = f"UFR-{cols[1]}-{cols[2]} ({cols[3]}{cols[4]})"
+        self.alg = cols[5]
+        self.avg = cols[6]
+        self.count = cols[7]
+
+
 join_cases = """
 SELECT  Cases.id
     ,   t1.faces AS faces1
@@ -120,25 +133,19 @@ SELECT  Cases.id
     ,   t1.letter AS letter1
     ,   t2.letter AS letter2
     ,   Cases.alg
+    ,   TbAvg.t as avg_time
+    ,   TbCount.n as time_count
 FROM Cases
     LEFT JOIN Targets t1 ON t1.id = Cases.target1
     LEFT JOIN Targets t2 ON t2.id = Cases.target2
+    LEFT JOIN 
+    (SELECT case_id, avg(time) AS t FROM Times GROUP BY case_id) TbAvg
+    ON id = TbAvg.case_id
+    
+    LEFT JOIN
+    (SELECT case_id, count(time) AS n FROM Times GROUP BY case_id) TbCount
+    ON id = TbCount.case_id
 """
-
-join_times = """
-SELECT Times.time
-    ,   Times.date
-    ,   t1.faces AS faces1
-    ,   t2.faces AS faces2
-    ,   t1.letter AS letter1
-    ,   t2.letter AS letter2
-FROM Times
-    LEFT JOIN Cases ON Times.case_id = Cases.id
-    LEFT JOIN Targets t1 ON t1.id = Cases.target1
-    LEFT JOIN Targets t2 ON t2.id = Cases.target2
-ORDER BY date DESC
-"""
-
 
 # Formula:
 # t: median solve time, d: days since last review, n: number of times
@@ -189,12 +196,28 @@ def submit(c, data):
     c.execute("INSERT INTO Times(time, date, case_id) VALUES (?,?,?);", data)
 
 
+join_times = """
+SELECT Times.time
+    ,   Times.date
+    ,   t1.faces AS faces1
+    ,   t2.faces AS faces2
+    ,   t1.letter AS letter1
+    ,   t2.letter AS letter2
+FROM Times
+    LEFT JOIN Cases ON Times.case_id = Cases.id
+    LEFT JOIN Targets t1 ON t1.id = Cases.target1
+    LEFT JOIN Targets t2 ON t2.id = Cases.target2
+ORDER BY date DESC
+"""
+
+
 @query
 def history(c):
     class Time:
         def __init__(self, data):
             self.time, self.date = data[:2]
             self.case = f"UFR-{data[2]}-{data[3]} ({data[4]}{data[5]})"
+
     c.execute(join_times)
     return [Time(x) for x in c.fetchall()]
 
