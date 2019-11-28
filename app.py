@@ -31,12 +31,7 @@ def home():
 
 @app.route("/corners")
 def corners():
-    def fix(w):
-        if w:
-            return 1 / w
-        return 1000
-    priority = [fix(x[3]) for x in case_queue]
-    case = random.choices(case_queue, weights=priority)[0]
+    case = db.next_case()
     return redirect(f"corners/{case[0]}")
 
 
@@ -58,6 +53,11 @@ def submit():
         db.submit((data["time"], date, data["case_id"]))
         return redirect(f"corners/{data['case_id']}")
     return redirect(url_for(f"corners"))
+
+
+@app.route("/table")
+def table():
+    grid = db.time_grid()
 
 
 if __name__ == '__main__':

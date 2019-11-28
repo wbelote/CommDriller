@@ -1,3 +1,4 @@
+import random
 import sqlite3
 
 
@@ -51,10 +52,8 @@ corners = "UBL URB UFR ULF LUB LFU LDF LBD FUL FRU FDR FLD RUF RBU RDB RFD BUR B
 letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 loc_id = {}
 for i in range(24):
-    loc_id[corners[i]] = 2 * i + 1
+    loc_id[corners[i]] = i + 1
     default_data += f"INSERT INTO Targets(type, faces, letter) VALUES (1, '{corners[i]}', '{letters[i]}');\n"
-    loc_id[edges[i]] = 2 * i + 2
-    default_data += f"INSERT INTO Targets(type, faces, letter) VALUES (2, '{edges[i]}', '{letters[i]}');\n"
 
 
 # Comms from Daniel's sheet
@@ -159,13 +158,24 @@ FROM Cases
 # Currently haven't implemented time since review yet.
 
 order_cases = """
-SELECT Cases.id, TbAvg.t, TbCount.n, 1 / (t + (t / (n + 1))) as priority FROM Cases
+SELECT Cases.id, TbAvg.t, TbCount.n, t + (t / (n + 1)) as priority FROM Cases
 
-LEFT JOIN 
+INNER JOIN 
 (SELECT case_id, avg(time) AS t FROM Times GROUP BY case_id) TbAvg
 ON id = TbAvg.case_id
 
-LEFT JOIN
+INNER JOIN
+(SELECT case_id, count(time) AS n FROM Times GROUP BY case_id) TbCount
+ON id = TbCount.case_id
+
+WHERE Cases.type = ?
+ORDER BY priority DESC
+"""
+
+cases_none = """
+SELECT Cases.id from Cases
+
+LEFT OUTER JOIN
 (SELECT case_id, count(time) AS n FROM Times GROUP BY case_id) TbCount
 ON id = TbCount.case_id
 
@@ -182,7 +192,22 @@ def all_cases(c, cat=1):
 @query
 def priority_cases(c, cat=1):
     c.execute(order_cases, (cat,))
-    return c.fetchall()
+    done = c.fetchall()
+    c.execute(cases_none, (cat,))
+    return c.fetchall() + done
+
+
+@query
+def next_case(c, cat=1):
+    c.execute(order_cases, (cat,))
+    done = c.fetchall()
+    c.execute(cases_none, (cat,))
+    undone = c.fetchall
+    if undone:
+        return undone[0]
+    else:
+        p = [r[3] for r in done]
+        return random.choices(done, weights=p)
 
 
 @query
@@ -220,6 +245,30 @@ def history(c):
 
     c.execute(join_times)
     return [Time(x) for x in c.fetchall()]
+
+
+case_stats = """
+SELECT Cases.id, Cases.target1, Cases.target2, TbAvg.t, TbCount.n FROM Cases
+
+INNER JOIN 
+(SELECT case_id, avg(time) AS t FROM Times GROUP BY case_id) TbAvg
+ON id = TbAvg.case_id
+
+INNER JOIN
+(SELECT case_id, count(time) AS n FROM Times GROUP BY case_id) TbCount
+ON id = TbCount.case_id
+
+WHERE Cases.type = ?
+"""
+
+
+@query
+def time_grid(c, cat=1):
+    c.execute(order_cases, (cat,))
+    grid = [[None for _ in range(25)] for _ in range(25)]
+    for row in c.fetchall():
+        grid[row[1]][row[2]] = row[3]
+    return grid
 
 
 if __name__ == '__main__':
