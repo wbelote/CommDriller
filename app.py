@@ -62,5 +62,12 @@ def table():
     return render_template("grid.html", grid=grid)
 
 
+@app.route("/delete/<time_corner>")
+def delete(time_corner):
+    time_id, case_id = time_corner.split("-")
+    db.delete_time(time_id)
+    return redirect(f"/corners/{case_id}")
+
+
 if __name__ == '__main__':
     app.run(debug=True)

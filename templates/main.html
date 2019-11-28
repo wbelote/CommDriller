@@ -18,10 +18,11 @@
     <div id="main" class="elev1">
 
         <div id="history-container" class="elev2">
+            <h2 class="history">history</h2>
             <div id="history">
                 {% for item in history %}
                 <div class="history">
-                    <a href="/delete/{{ item.id }}">X</a>
+                    <a class="history" href="/delete/{{ item.id }}-{{ case[0] }}">X</a>
                     <h3 class="history">{{ item.time }}</h3>
                     <p class="history">{{ item.case }}</p>
                 </div>

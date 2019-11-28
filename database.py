@@ -175,11 +175,11 @@ ORDER BY priority DESC
 cases_none = """
 SELECT Cases.id from Cases
 
-LEFT OUTER JOIN
+LEFT JOIN
 (SELECT case_id, count(time) AS n FROM Times GROUP BY case_id) TbCount
 ON id = TbCount.case_id
 
-WHERE Cases.type = ?
+WHERE Cases.type = ? AND TbCount.n IS NULL
 """
 
 
@@ -203,6 +203,7 @@ def next_case(c, cat=1):
     done = c.fetchall()
     c.execute(cases_none, (cat,))
     undone = c.fetchall()
+    print(f"Cases not done: {len(undone)}")
     if undone:
         return random.choice(undone)
     else:
@@ -247,6 +248,11 @@ def history(c):
 
     c.execute(join_times)
     return [Time(x) for x in c.fetchall()]
+
+
+@query
+def delete_time(c, tid):
+    c.execute("DELETE FROM Times WHERE id = ?", (tid,))
 
 
 case_stats = """
