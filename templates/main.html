@@ -44,18 +44,15 @@
             <h1 id="time-display">loading</h1>
         </div>
 
-        <div id="table" class="elev2">
-            <table>
-    
-                {% for row in grid %}
-                <tr>
-                    {% for time in row %}
-                    <td {{ time[1] }}>{{ time[0] }}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-    
-            </table>
+        <div id="stats" class="elev2">
+            <div id="stats-bar">
+                <h2 class="stats">statistics</h2>
+                <a class="stats" href="/table">VIEW TABLE</a>
+            </div>
+            <p class="stats" id="cases-done">Cases done: {{ stats[1] }} / {{ stats[0] }}</p>
+            <p class="stats" id="time-count">Total times: {{ stats[2] }}</p>
+            <p class="stats" id="time-avg">Average of all times: {{ stats[3] }}</p>
+            <p class="stats" id="avg-avg">Average of all cases: {{ stats[4] }}</p>
         </div>
 
     </div>

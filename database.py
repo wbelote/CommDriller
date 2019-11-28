@@ -203,7 +203,6 @@ def next_case(c, cat=1):
     done = c.fetchall()
     c.execute(cases_none, (cat,))
     undone = c.fetchall()
-    print(f"Cases not done: {len(undone)}")
     if undone:
         return random.choice(undone)
     else:
@@ -223,7 +222,7 @@ def submit(c, data):
 
 
 join_times = """
-SELECT Times.id
+SELECT TOP 50 Times.id
     ,   Times.time
     ,   Times.date
     ,   t1.faces AS faces1
@@ -255,6 +254,25 @@ def delete_time(c, tid):
     c.execute("DELETE FROM Times WHERE id = ?", (tid,))
 
 
+@query
+def stats(c, cat=1):
+    c.execute("SELECT count(id) FROM Cases WHERE type=?", (cat,))
+    total_cases = c.fetchall()[0][0]
+    c.execute("SELECT count(id) FROM Cases WHERE id IN (SELECT case_id FROM Times)"
+              " AND type=?", (cat,))
+    done_cases = c.fetchall()[0][0]
+    c.execute("SELECT count(time) FROM Times WHERE case_id IN"
+              " (SELECT id FROM Cases WHERE type=?)", (cat,))
+    time_count = c.fetchall()[0][0]
+    c.execute("SELECT avg(time) FROM Times WHERE case_id IN"
+              " (SELECT id FROM Cases WHERE type=?)", (cat,))
+    time_avg = c.fetchall()[0][0]
+    c.execute("SELECT avg(t) FROM (SELECT avg(time) AS t FROM Times GROUP BY case_id)")
+    avg_avg = c.fetchall()[0][0]
+
+    return total_cases, done_cases, time_count, round(time_avg, 3), round(avg_avg, 3)
+
+
 case_stats = """
 SELECT Cases.id, Cases.target1, Cases.target2, TbAvg.t, TbCount.n FROM Cases
 
@@ -268,7 +286,6 @@ ON id = TbCount.case_id
 
 WHERE Cases.type = ?
 """
-
 
 case_max = """
 SELECT min(TbAvg.t), max(TbAvg.t), max(TbCount.n) FROM Cases

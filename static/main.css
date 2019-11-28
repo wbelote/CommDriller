@@ -89,7 +89,7 @@ body {
 #time-input {
     grid-area: 2 / 2 / span 1 / span 1;
 }
-div#table {
+div#stats {
     grid-area: 3 / 2 / span 1 / span 1;
 }
 
@@ -164,5 +164,28 @@ td.left {
     background-color: #1e3B48;
     width: 72px;
     height: 32px;
+    font-size: 16px;
+}
+
+
+#stats {
+    padding: 20px;
+}
+
+#stats-bar{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: center;
+}
+
+a.stats {
+    font-size: 16px;
+    padding: 16px;
+}
+
+p.stats {
+    margin: 8px;
     font-size: 16px;
 }
