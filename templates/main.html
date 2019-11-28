@@ -21,6 +21,7 @@
             <div id="history">
                 {% for item in history %}
                 <div class="history">
+                    <a href="/delete/{{ item.id }}">X</a>
                     <h3 class="history">{{ item.time }}</h3>
                     <p class="history">{{ item.case }}</p>
                 </div>
@@ -29,17 +30,31 @@
         </div>
 
         <div id="case" class="elev2">
-            <h2 id="case-name">{{ name }}</h2>
-            <h3 id="case-alg">{{ alg }}</h3>
-            <a href="{{ url_for('corners') }}" id="next">NEXT CASE</a>
+            <h2 id="case-name">{{ case[1] }}</h2>
+            <h3 id="case-alg">{{ case[2] }}</h3>
+            <a href="/corners" id="next">NEXT CASE</a>
         </div>
 
         <div id="time-input" class="elev1">
             <form id="time-form" action="/submit" method="POST">
                 <input type="text" id="time-entry" name="time" class="elev0" value="">
-                <input type="hidden" name="case_id" value="{{ case_id }}">
+                <input type="hidden" name="case_id" value="{{ case[0] }}">
             </form>
             <h1 id="time-display">loading</h1>
+        </div>
+
+        <div id="table" class="elev2">
+            <table>
+    
+                {% for row in grid %}
+                <tr>
+                    {% for time in row %}
+                    <td {{ time[1] }}>{{ time[0] }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+    
+            </table>
         </div>
 
     </div>

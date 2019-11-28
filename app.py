@@ -39,7 +39,8 @@ def corners():
 def corners_id(case_id):
     case = db.case_for_id(case_id)
     case_name = f"UFR-{case[1]}-{case[2]} ({case[3]}{case[4]})"
-    return render_template("main.html", name=case_name, alg=case[5], case_id=case[0], history=db.history())
+    return render_template("main.html",
+                           case=[case[0], case_name, case[5]], history=db.history(), grid=db.time_grid())
 
 
 @app.route("/submit", methods=["POST", "GET"])

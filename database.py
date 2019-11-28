@@ -204,7 +204,7 @@ def next_case(c, cat=1):
     c.execute(cases_none, (cat,))
     undone = c.fetchall()
     if undone:
-        return undone[0]
+        return random.choice(undone)
     else:
         p = [r[3] for r in done]
         return random.choices(done, weights=p)
@@ -222,7 +222,8 @@ def submit(c, data):
 
 
 join_times = """
-SELECT Times.time
+SELECT Times.id
+    ,   Times.time
     ,   Times.date
     ,   t1.faces AS faces1
     ,   t2.faces AS faces2
@@ -240,8 +241,9 @@ ORDER BY date DESC
 def history(c):
     class Time:
         def __init__(self, data):
-            self.time, self.date = data[:2]
-            self.case = f"UFR-{data[2]}-{data[3]} ({data[4]}{data[5]})"
+            self.id = data[0]
+            self.time, self.date = data[1:3]
+            self.case = f"UFR-{data[3]}-{data[4]} ({data[5]}{data[6]})"
 
     c.execute(join_times)
     return [Time(x) for x in c.fetchall()]
