@@ -58,6 +58,7 @@ def submit():
 @app.route("/table")
 def table():
     grid = db.time_grid()
+    return render_template("grid.html", grid=grid)
 
 
 if __name__ == '__main__':

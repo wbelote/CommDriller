@@ -37,7 +37,7 @@ CREATE TABLE Times (
 
 DROP TABLE IF EXISTS Targets;
 CREATE TABLE Targets (
-    id    INTEGER NOT NULL PRIMARY KEY UNIQUE,
+    id    INTEGER NOT NULL PRIMARY KEY,
     type    INTEGER NOT NULL,
     faces TEXT NOT NULL UNIQUE,
     letter    TEXT NOT NULL
@@ -139,11 +139,11 @@ FROM Cases
     LEFT JOIN Targets t2 ON t2.id = Cases.target2
     LEFT JOIN 
     (SELECT case_id, avg(time) AS t FROM Times GROUP BY case_id) TbAvg
-    ON id = TbAvg.case_id
+    ON Cases.id = TbAvg.case_id
     
     LEFT JOIN
     (SELECT case_id, count(time) AS n FROM Times GROUP BY case_id) TbCount
-    ON id = TbCount.case_id
+    ON Cases.id = TbCount.case_id
 """
 
 # Formula:
@@ -202,7 +202,7 @@ def next_case(c, cat=1):
     c.execute(order_cases, (cat,))
     done = c.fetchall()
     c.execute(cases_none, (cat,))
-    undone = c.fetchall
+    undone = c.fetchall()
     if undone:
         return undone[0]
     else:
@@ -262,12 +262,45 @@ WHERE Cases.type = ?
 """
 
 
+case_max = """
+SELECT max(TbAvg.t), max(TbCount.n) FROM Cases
+
+INNER JOIN 
+(SELECT case_id, avg(time) AS t FROM Times GROUP BY case_id) TbAvg
+ON id = TbAvg.case_id
+
+INNER JOIN
+(SELECT case_id, count(time) AS n FROM Times GROUP BY case_id) TbCount
+ON id = TbCount.case_id
+
+WHERE Cases.type = ?
+"""
+
+
 @query
 def time_grid(c, cat=1):
-    c.execute(order_cases, (cat,))
-    grid = [[None for _ in range(25)] for _ in range(25)]
+    grid = [[["", "background-color: #0C181D"] for _ in range(25)] for _ in range(25)]
+
+    c.execute(case_max, (cat,))
+    max_time, max_count = c.fetchall()[0]
+
+    c.execute("SELECT target1, target2 FROM Cases WHERE Cases.type = ?", (cat,))
     for row in c.fetchall():
-        grid[row[1]][row[2]] = row[3]
+        grid[row[0]][row[1]] = ["-", "background-color: rgba(0, 0, 0, 0);"]
+
+    c.execute("SELECT id, faces, letter FROM Targets WHERE type = ?", (cat,))
+    for row in c.fetchall():
+        grid[0][row[0]] = [f"{row[1]} ({row[2]})", "font-size: 16px; background-color: #1E3B48"]
+        grid[row[0]][0] = [f"{row[1]} ({row[2]})", "width: 72px; font-size: 16px; background-color: #1E3B48"]
+
+    c.execute(case_stats, (cat,))
+    for row in c.fetchall():
+        hue = int(40 - 180 * row[3] / max_time) % 360
+        sat = 100
+        lum = 50  # int(50 * row[4] / max_count)
+        grid[row[1]][row[2]] = [round(row[3], 3),
+                                f"background-color: hsl({hue}, {sat}%, {lum}%);"]
+
     return grid
 
 

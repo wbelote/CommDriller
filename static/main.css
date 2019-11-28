@@ -30,8 +30,11 @@
     background-color: #12242B;
 }
 .elev2 {
-    background-color: #18303A;
+    background-color: #182f3A;
     border-radius: 8px;
+}
+.elev3 {
+    background-color: #1e3B48;
 }
 
 
@@ -118,4 +121,26 @@ div.history {
     display: inline-block;
     height: 42px;
     padding: 4px;
+}
+
+
+div#table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+table {
+    margin: 20px;
+    border: 1px solid white;
+    border-collapse: collapse;
+}
+
+td {
+    width: 32px;
+    height: 32px;
+    border: 1px solid white;
+    padding: 4px;
+    font-size: 12px;
+    text-align: center;
 }
