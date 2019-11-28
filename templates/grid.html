@@ -21,7 +21,7 @@
             {% for row in grid %}
             <tr>
                 {% for time in row %}
-                <td style="{{ time[1] }}">{{ time[0] }}</td>
+                <td {{ time[1] }}>{{ time[0] }}</td>
                 {% endfor %}
             </tr>
             {% endfor %}

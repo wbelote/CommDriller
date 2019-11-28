@@ -125,6 +125,7 @@ div.history {
 
 
 div#table {
+    margin: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -132,15 +133,31 @@ div#table {
 
 table {
     margin: 20px;
-    border: 1px solid white;
     border-collapse: collapse;
 }
 
 td {
-    width: 32px;
-    height: 32px;
     border: 1px solid white;
-    padding: 4px;
     font-size: 12px;
     text-align: center;
+}
+
+td.empty {
+    background-color: #0C181D;
+}
+
+td.notime {
+    background-color: #12242B;
+}
+
+td.top {
+    background-color: #1e3B48;
+    width: 40px;
+    height: 54px;
+}
+
+td.left {
+    background-color: #1e3B48;
+    width: 72px;
+    height: 32px;
 }

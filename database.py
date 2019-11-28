@@ -263,7 +263,7 @@ WHERE Cases.type = ?
 
 
 case_max = """
-SELECT max(TbAvg.t), max(TbCount.n) FROM Cases
+SELECT min(TbAvg.t), max(TbAvg.t), max(TbCount.n) FROM Cases
 
 INNER JOIN 
 (SELECT case_id, avg(time) AS t FROM Times GROUP BY case_id) TbAvg
@@ -279,27 +279,27 @@ WHERE Cases.type = ?
 
 @query
 def time_grid(c, cat=1):
-    grid = [[["", "background-color: #0C181D"] for _ in range(25)] for _ in range(25)]
+    grid = [[['', 'class=empty'] for _ in range(25)] for _ in range(25)]
 
     c.execute(case_max, (cat,))
-    max_time, max_count = c.fetchall()[0]
+    min_time, max_time, max_count = c.fetchall()[0]
 
     c.execute("SELECT target1, target2 FROM Cases WHERE Cases.type = ?", (cat,))
     for row in c.fetchall():
-        grid[row[0]][row[1]] = ["-", "background-color: rgba(0, 0, 0, 0);"]
+        grid[row[0]][row[1]] = ['-', 'class=notime']
 
     c.execute("SELECT id, faces, letter FROM Targets WHERE type = ?", (cat,))
     for row in c.fetchall():
-        grid[0][row[0]] = [f"{row[1]} ({row[2]})", "font-size: 16px; background-color: #1E3B48"]
-        grid[row[0]][0] = [f"{row[1]} ({row[2]})", "width: 72px; font-size: 16px; background-color: #1E3B48"]
+        grid[0][row[0]] = [f"{row[1]} ({row[2]})", 'class=top']
+        grid[row[0]][0] = [f"{row[1]} ({row[2]})", 'class=left']
 
     c.execute(case_stats, (cat,))
     for row in c.fetchall():
-        hue = int(40 - 180 * row[3] / max_time) % 360
+        hue = int(40 - 180 * (row[3] - min_time) / (max_time - min_time)) % 360
         sat = 100
-        lum = 50  # int(50 * row[4] / max_count)
-        grid[row[1]][row[2]] = [round(row[3], 3),
-                                f"background-color: hsl({hue}, {sat}%, {lum}%);"]
+        lum = int(20 + 20 * row[4] / max_count)
+        grid[row[1]][row[2]] = [round(row[3], 2),
+                                f'class=time style=background-color:hsl({hue},{sat}%,{lum}%);']
 
     return grid
 
