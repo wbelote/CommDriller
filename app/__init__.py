@@ -1,11 +1,8 @@
-import random
 import time
 
 from flask import Flask, render_template, request, redirect, url_for
 
 import database as db
-
-app = Flask(__name__)
 
 """
 App for tracking times and algs for 3-style comms
@@ -21,7 +18,7 @@ Timer view:
 View time history, for case or for all [PARTIAL]
 """
 
-case_queue = db.priority_cases()
+app = Flask(__name__)
 
 
 @app.route("/")
