@@ -81,11 +81,11 @@ def invert(alg):
     return out
 
 
-with open("comms-corners.tsv") as table:
+with open("daniel-corners.tsv") as table:
     firsts = table.readline().replace("’", "'").replace("â€™", "'")
     firsts = firsts.strip("\n").split("\t")[1:]
     # print(firsts)
-    comms = {p: {} for p in firsts}
+    daniel_comms = {p: {} for p in firsts}
     for i in range(24):
         line = table.readline().replace("’", "'").replace("â€™", "'")
         line = line.strip("\n").split("\t")
@@ -95,14 +95,51 @@ with open("comms-corners.tsv") as table:
             # print(i, j, firsts[j], second, line[j], invert(line[j]))
             # print(f"-----------\n{i} {j}\n\tt1: {firsts[j]}\n\tt2: {second}\n"
             #       f"\tnormal: {line[j]}\n\tinverse: {invert(line[j])}\n------\n")
-            comms[firsts[j]][second] = line[j]
-            comms[second][firsts[j]] = invert(line[j])
+            daniel_comms[firsts[j]][second] = line[j]
+            daniel_comms[second][firsts[j]] = invert(line[j])
             normal = line[j].replace("'", "''")
             inverse = invert(line[j]).replace("'", "''")
             default_data += "INSERT INTO Cases(type, buffer, target1, target2, alg)" \
                             f" VALUES(1, 5, {loc_id[firsts[j]]}, {loc_id[second]}, '{normal}');\n"
             default_data += "INSERT INTO Cases(type, buffer, target1, target2, alg)" \
                             f" VALUES(1, 5, {loc_id[second]}, {loc_id[firsts[j]]}, '{inverse}');\n"
+
+with open("max-corners.tsv") as table:
+    firsts = table.readline().replace("’", "'").replace("â€™", "'")
+    firsts = firsts.strip("\n").split("\t")[1:]
+    # print(firsts)
+    max_comms = {p: {} for p in firsts}
+    for i in range(21):
+        line = table.readline().replace("’", "'").replace("â€™", "'")
+        line = line.strip("\n").split("\t")
+        # print(f"##########\n{i}\n{line}\n###########\n")
+        second = line.pop(0)
+        for j in filter(lambda x: line[x] not in {"", "twist", "flip"}, range(21)):
+            # print(i, j, firsts[j], second, line[j], invert(line[j]))
+            # print(f"-----------\n{i} {j}\n\tt1: {firsts[j]}\n\tt2: {second}\n"
+            #       f"\tnormal: {line[j]}\n\tinverse: {invert(line[j])}\n------\n")
+            max_comms[firsts[j]][second] = line[j]
+
+            if firsts[j] in daniel_comms.keys():
+                t1 = firsts[j]
+            else:
+                t1 = firsts[j][0] + firsts[j][2] + firsts[j][1]
+
+            if second in daniel_comms[t1].keys():
+                t2 = second
+            else:
+                t2 = second[0] + second[2] + second[1]
+
+            print(firsts[j], second)
+            print("Daniel:", daniel_comms[t1][t2])
+            print("Max:", line[j])
+            print()
+            # normal = line[j].replace("'", "''")
+            # inverse = invert(line[j]).replace("'", "''")
+            # default_data += "INSERT INTO Cases(type, buffer, target1, target2, alg)" \
+            #                 f" VALUES(1, 5, {loc_id[firsts[j]]}, {loc_id[second]}, '{normal}');\n"
+            # default_data += "INSERT INTO Cases(type, buffer, target1, target2, alg)" \
+            #                 f" VALUES(1, 5, {loc_id[second]}, {loc_id[firsts[j]]}, '{inverse}');\n"
 
 
 @query
@@ -330,4 +367,4 @@ def time_grid(c, cat=1):
 
 
 if __name__ == '__main__':
-    setup()
+    pass  # setup()
