@@ -12,7 +12,7 @@ stickers = pd.DataFrame([
 ])
 
 cases = pd.read_csv('comms.tsv', sep='\t', header=0)
-times = pd.DataFrame(columns=['time', 'date', 'case'])
+times = pd.DataFrame(columns=['time', 'date', 'case_id'])
 
 
 def next_case(pt=0):
@@ -21,6 +21,7 @@ def next_case(pt=0):
 
 def case_for_id(case_id):
     c = dict(cases.iloc[int(case_id)])
+    c['id'] = case_id
     t1 = stickers.iloc[c['target1']]
     t2 = stickers.iloc[c['target2']]
     c['name'] = f"UFR-{t1['faces']}-{t2['faces']} ({t1['letter']}{t2['letter']})"

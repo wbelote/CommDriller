@@ -39,7 +39,7 @@
         <div id="time-input" class="elev1">
             <form id="time-form" action="/submit" method="POST">
                 <input type="text" id="time-entry" name="time" class="elev0" value="">
-                <input type="hidden" name="case_id" value="{{ case[0] }}">
+                <input name="case_id" type="hidden" value="{{ case['id'] }}">
             </form>
             <h1 id="time-display">loading</h1>
         </div>
