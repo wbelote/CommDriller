@@ -33,7 +33,9 @@ def history():
 
 
 def submit(form_data):
-    times.append(form_data, ignore_index=True)
+    form_data['time'] = float(form_data['time'])
+    global times
+    times = times.append(form_data, ignore_index=True)
     print(times)
 
 

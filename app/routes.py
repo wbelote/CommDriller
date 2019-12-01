@@ -18,7 +18,6 @@ def corners():
 @app.route("/corners/<case_id>")
 def corners_id(case_id):
     case = data.case_for_id(case_id)
-    print(case)
     return render_template("main.html", case=case, history=data.history(), stats=[])
 
 
@@ -30,9 +29,7 @@ def submit():
             print("DATA NOT SUBMITTED")
             return redirect(f"corners/{form_data['case_id']}")
         form_data['date'] = int(time.time())
-        print(f"form data: {form_data}")
         data.submit(form_data)
-        print(f"form data after: {form_data}")
         return redirect(f"corners/{form_data['case_id']}")
     return redirect(url_for("corners"))
 
