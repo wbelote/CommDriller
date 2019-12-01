@@ -7,7 +7,7 @@ stickers = pd.DataFrame([
     {'type': 0, 'faces': s, 'letter': c, }
     for s, c in zip(
         'UBL URB UFR ULF LUB LFU LDF LBD FUL FRU FDR FLD RUF RBU RDB RFD BUR BLU BDL BRD DFL DRF DBR DLB'.split(),
-        'ABCDEFGHIJKLMNOPQRSTOVWXYZ'
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     )
 ])
 
@@ -20,7 +20,7 @@ def next_case(pt=0):
 
 
 def case_for_id(case_id):
-    c = cases.iloc[int(case_id)]
+    c = dict(cases.iloc[int(case_id)])
     t1 = stickers.iloc[c['target1']]
     t2 = stickers.iloc[c['target2']]
     c['name'] = f"UFR-{t1['faces']}-{t2['faces']} ({t1['letter']}{t2['letter']})"
@@ -32,7 +32,8 @@ def history():
 
 
 def submit(form_data):
-    times.append(form_data)
+    times.append(form_data, ignore_index=True)
+    print(times)
 
 
 if __name__ == '__main__':
