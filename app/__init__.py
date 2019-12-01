@@ -15,3 +15,6 @@ View time history, for case or for all [PARTIAL]
 """
 
 app = Flask(__name__)
+app.config['SECRET-KEY'] = 'dev-key'
+
+from app import routes
