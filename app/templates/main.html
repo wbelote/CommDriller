@@ -20,7 +20,7 @@
         <div id="history-container" class="elev2">
             <h2 class="history">history</h2>
             <div id="history">
-                {% for item in history %}
+                {% for i, item in history.iterrows() %}
                 <div class="history">
                     <a class="history" href="/delete/{{ item.id }}-{{ case[0] }}">X</a>
                     <h3 class="history">{{ item.time }}</h3>
@@ -31,8 +31,8 @@
         </div>
 
         <div id="case" class="elev2">
-            <h2 id="case-name">{{ case[1] }}</h2>
-            <h3 id="case-alg">{{ case[2] }}</h3>
+            <h2 id="case-name">{{ case['name'] }}</h2>
+            <h3 id="case-alg">{{ case['alg'] }}</h3>
             <a href="/corners" id="next">NEXT CASE</a>
         </div>
 

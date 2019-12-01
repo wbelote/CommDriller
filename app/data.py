@@ -16,11 +16,15 @@ times = pd.DataFrame(columns=['time', 'date', 'case'])
 
 
 def next_case(pt=0):
-    return cases.iloc[random.choice(cases.index)]
+    return random.choice(cases.index)
 
 
 def case_for_id(case_id):
-    return cases.iloc[case_id]
+    c = cases.iloc[int(case_id)]
+    t1 = stickers.iloc[c['target1']]
+    t2 = stickers.iloc[c['target2']]
+    c['name'] = f"UFR-{t1['faces']}-{t2['faces']} ({t1['letter']}{t2['letter']})"
+    return c
 
 
 def history():
@@ -32,4 +36,4 @@ def submit(form_data):
 
 
 if __name__ == '__main__':
-    print(random.choice(cases.index))
+    print(cases.iloc[190])

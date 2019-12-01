@@ -17,10 +17,7 @@ def corners():
 
 @app.route("/corners/<case_id>")
 def corners_id(case_id):
-    case = data.case_for_id(case_id)
-    case_name = f"UFR-{case[1]}-{case[2]} ({case[3]}{case[4]})"
-    return render_template("main.html",
-                           case=[case[0], case_name, case[5]], history=data.history(), stats=[])
+    return render_template("main.html", case=data.case_for_id(case_id), history=data.history(), stats=[])
 
 
 @app.route("/submit", methods=["POST", "GET"])
