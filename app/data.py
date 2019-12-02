@@ -22,7 +22,7 @@ cases['repr'] = cases.apply(case_name, axis=1)
 times = pd.DataFrame(columns=['time', 'date', 'case_id'])
 
 
-def next_case(pt=0):
+def next_case():
     return random.choice(cases.index)
 
 
@@ -37,7 +37,6 @@ def history():
     h = times.copy().sort_values(by='date', ascending=False)
     names = cases.loc[list(h['case_id']), 'repr']
     h['case_name'] = list(names)
-    print(h)
     return h
 
 

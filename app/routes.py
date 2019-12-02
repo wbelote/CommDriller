@@ -35,7 +35,8 @@ def submit():
         res = make_response(redirect(f"corners/{form_data['case_id']}"))
         cookie = request.cookies.get('times')
         res.set_cookie(
-            f"{cookie}{round(float(form_data['time']), 3)},{int(form_data['date'])},{int(form_data['case_id'])}\n"
+            'times',
+            f"{cookie}i{round(float(form_data['time']), 3)}i{int(form_data['date'])}i{int(form_data['case_id'])}n"
         )
         return res
 
