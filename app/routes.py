@@ -1,6 +1,6 @@
 import time
 
-from flask import redirect, render_template, request, url_for
+from flask import redirect, render_template, request, url_for, make_response
 
 from app import app, data
 
@@ -24,13 +24,21 @@ def corners_id(case_id):
 @app.route("/submit", methods=["POST", "GET"])
 def submit():
     if request.method == "POST":
+
         form_data = dict(request.form.items())
         if not form_data["time"].strip():
             print("DATA NOT SUBMITTED")
             return redirect(f"corners/{form_data['case_id']}")
         form_data['date'] = int(time.time())
-        data.submit(form_data)
-        return redirect(f"corners/{form_data['case_id']}")
+
+        # data.submit(form_data)
+        res = make_response(redirect(f"corners/{form_data['case_id']}"))
+        cookie = request.cookies.get('times')
+        res.set_cookie(
+            f"{cookie}{round(float(form_data['time']), 3)},{int(form_data['date'])},{int(form_data['case_id'])}\n"
+        )
+        return res
+
     return redirect(url_for("corners"))
 
 # @app.route("/table")
