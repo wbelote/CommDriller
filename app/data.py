@@ -18,9 +18,8 @@ def case_name(row):
 
 cases = pd.read_csv('comms.tsv', sep='\t', header=0)
 cases['repr'] = cases.apply(case_name, axis=1)
-print(cases)
 
-times = pd.DataFrame(columns=['time', 'date', 'case_id'], dtype=float)
+times = pd.DataFrame(columns=['time', 'date', 'case_id'])
 
 
 def next_case(pt=0):
@@ -35,9 +34,10 @@ def case_for_id(case_id):
 
 
 def history():
-    h = times.copy().sort_values(by='date')
-    h['case_name'] = cases.loc[list(h['case_id']), 'repr']
-    print("history:", h)
+    h = times.copy().sort_values(by='date', ascending=False)
+    names = cases.loc[list(h['case_id']), 'repr']
+    h['case_name'] = list(names)
+    print(h)
     return h
 
 
