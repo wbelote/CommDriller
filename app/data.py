@@ -20,13 +20,11 @@ def case_name(row):
 cases = pd.read_csv('comms.tsv', sep='\t', header=0)
 cases['repr'] = cases.apply(case_name, axis=1)
 
-users = pd.DataFrame(columns=['key'])
 times = pd.DataFrame(columns=['user_id', 'time', 'date', 'case_id'])
 
 
 def new_session():
     sid = "".join(random.choices(string.ascii_lowercase + string.digits, k=50))
-    users.append({'key': sid}, ignore_index=True)
     return sid
 
 
@@ -42,7 +40,10 @@ def case_for_id(case_id):
 
 
 def history(user_id):
-    h = times.copy()[times['user_id'] == user_id].sort_values(by='date', ascending=False)
+    h = times.copy()
+    print(h)
+    h = h[times['user_id'] == user_id]
+    h = h.sort_values(by='date', ascending=False)
     names = cases.loc[list(h['case_id']), 'repr']
     h['case_name'] = list(names)
     return h
@@ -50,9 +51,9 @@ def history(user_id):
 
 def submit(form_data):
     form_data['time'] = float(form_data['time'])
-    form_data['user_id'] = users.index[users['key'] == form_data['user_id']]
     global times
     times = times.append(form_data, ignore_index=True)
+    times['time'] = times['time'].astype(float)
     times['date'] = times['date'].astype(int)
     times['case_id'] = times['case_id'].astype(int)
 
